@@ -4,7 +4,7 @@
     <el-aside :width="isOpen?'200px':'64px'">
       <div class="logo" :class="{smallLogo:!this.isOpen}"></div>
       <el-menu
-        default-active="/"
+        :default-active="$route.path"
         background-color="#002033"
         text-color="#fff"
         active-text-color="#ffd04b"
@@ -48,15 +48,24 @@
       <el-header>
         <span class="el-icon-s-fold icon" @click="toggleMenu"></span>
         <span class="text">江苏传智播客科技教育有限公司</span>
-        <el-dropdown class="dropdown">
+        <el-dropdown class="dropdown" @command="handleClick">
           <span class="el-dropdown-link">
-            <img class="headIcon" src="../../assets/avatar.jpg" alt />
-            <span class="userName">用户名称</span>
+            <!-- 渲染设置的用户信息 -->
+            <img class="headIcon" :src="userInfo.photo" alt />
+            <span class="userName">{{userInfo.name}}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-unlock">退出登录</el-dropdown-item>
+            <!-- 第一种：绑定点击事件 -->
+            <!-- native意思是把事件绑定在原生dom上 -->
+
+            <!-- <el-dropdown-item icon="el-icon-setting" @click.native="setting">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-unlock" @click.native="logout">退出登录</el-dropdown-item> -->
+
+            <!-- 第二种：组件提供的方法   ---常用   -->
+            <!-- 给el-dropdown设置@command -->
+             <el-dropdown-item icon="el-icon-setting" command="setting">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-unlock" command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -70,16 +79,36 @@
 </template>
 
 <script>
+import local from '@/utils/local'
 export default {
   methods: {
     toggleMenu () {
       this.isOpen = !this.isOpen
+    },
+    setting () {
+      this.$router.push('/setting')
+    },
+    logout () {
+      // 清除用户信息
+      local.delUser()
+      // 跳转登录页面
+      this.$router.push('/login')
+    },
+    handleClick (command) {
+      this[command]()
     }
   },
   data () {
     return {
-      isOpen: true
+      isOpen: true,
+      userInfo: {}
     }
+  },
+  created () {
+    // 设置用户信息
+    const user = local.getUser() || {}
+    this.userInfo.name = user.name
+    this.userInfo.photo = user.photo
   }
 }
 </script>

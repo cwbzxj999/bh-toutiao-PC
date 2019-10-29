@@ -7,6 +7,7 @@ import Login from '../views/login'
 import Home from '@/views/home'
 import Welcome from '@/views/welcome'
 import NotFound from '@/views/404'
+import Article from '@/views/article'
 
 // 使用VueRouter
 Vue.use(VueRouter)
@@ -19,6 +20,10 @@ const router = new VueRouter({
     children: [{
       path: '/',
       component: Welcome
+    },
+    {
+      path: '/article',
+      component: Article
     }]
   },
   {

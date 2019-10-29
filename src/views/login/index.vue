@@ -68,23 +68,33 @@ export default {
     // 登录，整体校验
     login () {
       // 获取表单组件实例---->调用校验函数validate
-      this.$refs['loginForm'].validate(valid => {
+      this.$refs['loginForm'].validate(async valid => {
         if (valid) {
-          // 发送请求，校验手机号和验证码，后台操作
-          this.$http({
-            url: 'authorizations',
-            method: 'post',
-            data: this.formData
-          })
-            .then(res => {
-              // 成功
-              // 保存用户信息（token）
-              local.setUser(res.data.data)
-              this.$router.push('/')
-            })
-            .catch(() => {
-              this.$message.error('手机号或验证码错误')
-            })
+          // // 发送请求，校验手机号和验证码，后台操作
+          // this.$http({
+          //   url: 'authorizations',
+          //   method: 'post',
+          //   data: this.formData
+          // })
+          //   .then(res => {
+          //     // 成功
+          //     // 保存用户信息（token）
+          //     local.setUser(res.data.data)
+          //     this.$router.push('/')
+          //   })
+          //   .catch(() => {
+          //     this.$message.error('手机号或验证码错误')
+          //   })
+
+          // 使用async和await改造登录的请求
+          // 当一段代码不能保证一定没有报错try{} catch(e){} 捕获异常处理异常
+          try {
+            const { data: { data } } = await this.$http.post('authorizations', this.formData)
+            local.setUser(data)
+            this.$router.push('/')
+          } catch (e) {
+            this.$message.error('手机号或验证码错误')
+          }
         }
       })
     }
