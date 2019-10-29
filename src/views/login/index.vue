@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import local from '@/utils/local'
 export default {
   data () {
     const checkMobile = (rule, value, callback) => {
@@ -43,8 +44,8 @@ export default {
     }
     return {
       formData: {
-        mobile: '',
-        code: ''
+        mobile: '15688136790',
+        code: '246810'
       },
       checked: true,
       // loginRules为：rules定义的校验规则
@@ -76,6 +77,9 @@ export default {
             data: this.formData
           })
             .then(res => {
+              // 成功
+              // 保存用户信息（token）
+              local.setUser(res.data.data)
               this.$router.push('/')
             })
             .catch(() => {
