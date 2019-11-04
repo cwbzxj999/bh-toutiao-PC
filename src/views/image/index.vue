@@ -39,11 +39,11 @@
       <!-- 对话框 -->
       <el-dialog title="添加素材" :visible.sync="dialogVisible" width="300px">
         <el-upload
-  class="avatar-uploader"
-  action="http://ttapi.research.itcast.cn/mp/v1_0/user/images" :headers="headers" :show-file-list="false" :on-success="handleSuccess" name="image">
-  <img v-if="imageUrl" :src="imageUrl" class="avatar">
-  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-</el-upload>
+          class="avatar-uploader"
+          action="http://ttapi.research.itcast.cn/mp/v1_0/user/images" :headers="headers" :show-file-list="false" :on-success="handleSuccess" name="image">
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
       </el-dialog>
     </el-card>
   </div>

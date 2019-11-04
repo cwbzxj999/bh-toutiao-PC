@@ -3,7 +3,7 @@
   <div class="my-image">
       <!-- 按钮 -->
       <div class="btn_box" @click="open">
-          <img src="../assets/default.png" alt="">
+          <img :src="value||btnImage" alt="">
       </div>
       <!-- 对话框 -->
        <el-dialog :visible.sync="dialogVisible" width="750px">
@@ -41,7 +41,7 @@
         </el-tabs>
         <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="confirmImage">确 定</el-button>
         </span>
       </el-dialog>
   </div>
@@ -49,7 +49,10 @@
 
 <script>
 import local from '@/utils/local'
+import defaultImage from '../assets/default.png'
 export default {
+  // 子组件接收
+  props: ['value'],
   data () {
     return {
       // 对话框隐藏
@@ -73,7 +76,9 @@ export default {
       // 请求头
       headers: {
         Authorization: `Bearer ${local.getUser().token}`
-      }
+      },
+      // 按钮默认图片
+      btnImage: defaultImage
     }
   },
   methods: {
@@ -105,6 +110,27 @@ export default {
     handleSuccess (res) {
       this.uploadImageUrl = res.data.url
       this.$message.success('上传成功')
+    },
+    // 点击确认上传图片后
+    confirmImage () {
+      if (this.activeName === 'image') {
+        // 说明是素材库
+        if (!this.selectedImageUrl) {
+          return this.$message.warning('请选择一张照片')
+        }
+        // this.btnImage = this.selectedImageUrl
+        // 提交给父组件
+        this.$emit('input', this.selectedImageUrl)
+        this.dialogVisible = false
+      } else {
+        if (!this.uploadImageUrl) {
+          return this.$message.warning('请上传一张图片')
+        }
+        // this.btnImage = this.uploadImageUrl
+        // 提交给父组件
+        this.$emit('input', this.uploadImageUrl)
+        this.dialogVisible = false
+      }
     }
   }
 }
