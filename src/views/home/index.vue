@@ -80,6 +80,7 @@
 
 <script>
 import local from '@/utils/local'
+import eventBus from '@/eventBus'
 export default {
   methods: {
     toggleMenu () {
@@ -101,7 +102,11 @@ export default {
   data () {
     return {
       isOpen: true,
-      userInfo: {}
+      // 响应式数据，记得先声明
+      userInfo: {
+        name: '',
+        photo: ''
+      }
     }
   },
   created () {
@@ -109,6 +114,14 @@ export default {
     const user = local.getUser() || {}
     this.userInfo.name = user.name
     this.userInfo.photo = user.photo
+    // 绑定事件，home接收name值
+    eventBus.$on('updateName', (dataName) => {
+      this.userInfo.name = dataName
+    })
+    // 绑定事件，home接收photo值
+    eventBus.$on('updatePhoto', (dataPhoto) => {
+      this.userInfo.photo = dataPhoto
+    })
   }
 }
 </script>
